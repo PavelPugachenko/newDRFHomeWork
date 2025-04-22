@@ -28,7 +28,6 @@ class LessonListApiView(ListAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
 
-class HomePageView(TemplateView):
-    template_name = "home.html"
+
 
 
