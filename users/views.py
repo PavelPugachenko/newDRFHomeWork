@@ -3,6 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from users.models import Payment, User
 from users.serializers import PaymentSerializer, UserSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 from users.filters import PaymentFilter
 from rest_framework import viewsets
 
@@ -15,7 +16,6 @@ class UserCreateAPIView(CreateAPIView):
         user = serializer.save(is_active=True)
         user.set_password(user.password)
         user.save()
-
 
 class UserListAPIView(ListAPIView):
     queryset = User.objects.all()
@@ -39,3 +39,5 @@ class PaymentCreateAPIView(CreateAPIView):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
 
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer

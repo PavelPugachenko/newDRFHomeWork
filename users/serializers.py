@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from users.models import Payment, User
 from rest_framework.serializers import ModelSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.fields import SerializerMethodField
 
 
@@ -18,3 +19,13 @@ class UserSerializer(ModelSerializer):
         fields = ('id', 'username', 'email', 'payment_history',)
 
 
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Добавление пользовательских полей в токен
+        token['username'] = user.username
+        token['email'] = user.email
+
+        return token
