@@ -1,21 +1,9 @@
-from rest_framework import permissions
+from rest_framework.permissions import BasePermission
 
 
-class IsModeratorOrReadOnly(permissions.BasePermission):
+class IsOwnerOrModerator(BasePermission):
     def has_permission(self, request, view):
-        # Разрешаем GET-запросы всем
-        if request.method in permissions.SAFE_METHODS:
+        if request.user.is_staff:
             return True
+        return request.user == view.get_object().owner
 
-        # Проверяем, является ли пользователь модератором
-        return request.user.groups.filter(name='moderators').exists()
-
-
-class IsOwnerOrModerator(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        # Разрешаем GET-запросы всем
-        if request.method in permissions.SAFE_METHODS:
-            return True
-
-        # Проверяем, является ли пользователь владельцем или модератором
-        return obj.owner == request.user or request.user.groups.filter(name='moderators').exists()
