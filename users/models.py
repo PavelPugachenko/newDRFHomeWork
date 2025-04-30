@@ -17,12 +17,6 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, max_length=254)
     phone = models.CharField(
         max_length=15,
-        validators=[
-            RegexValidator(
-                regex=r'^\+?1-9\d{9,14}$',
-                message="Номер телефона должен быть в международном формате, например: +79991234567"
-            )
-        ],
         unique=True
     )
     city = models.CharField(max_length=100)
@@ -34,7 +28,7 @@ class User(AbstractUser):
     )
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = 'username'
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return self.email
@@ -42,14 +36,11 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse('user-detail', kwargs={'pk': self.pk})
 
-    def clean(self):
-        super().clean()
-        if not self.phone.startswith('+'):
-            raise ValidationError({'phone': 'Номер телефона должен начинаться с +'})
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
 
 class Payment(models.Model):
     PAYMENT_CHOICES = [
