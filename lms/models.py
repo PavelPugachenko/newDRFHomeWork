@@ -25,6 +25,8 @@ class Course(models.Model):
     )
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
+    name = models.CharField(max_length=255)
+    
     class Meta:
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"

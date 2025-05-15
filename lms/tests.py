@@ -10,8 +10,8 @@ class LessonTestCase(APITestCase):
 
     def setUp(self):
         self.user = User.objects.create(email='www@yandex.com')
-        self.course = Course.objects.create(name='Основы Английского', description='научитесь грамотно говорить в любой стране')
-        self.lesson = Lesson.objects.create(name='жи-ши с буквой и', course=self.course, owner=self.user)
+        self.course = Course.objects.create(title='Основы Английского', description='научитесь грамотно говорить в любой стране')
+        self.lesson = Lesson.objects.create(title='жи-ши с буквой и', course=self.course, owner=self.user)
         self.client.force_authenticate(user=self.user)
 
     def test_create_lesson(self):
@@ -123,8 +123,8 @@ class LessonTestCase(APITestCase):
 class SubscriptionTestCase(APITestCase):
     def setUp(self):
         self.user = User.objects.create(email='www@yandex.com')
-        self.course = Course.objects.create(name='Основы Английского', description='научитесь грамотно говорить в любой стране')
-        self.lesson = Lesson.objects.create(name='жи-ши с буквой и', course=self.course, owner=self.user)
+        self.course = Course.objects.create(title='Основы Английского', description='научитесь грамотно говорить в любой стране')
+        self.lesson = Lesson.objects.create(title='жи-ши с буквой и', course=self.course, owner=self.user)
         self.subscription = Subscription.objects.create(user=self.user, course=self.course)
         self.client.force_authenticate(user=self.user)
 
