@@ -76,3 +76,18 @@ class Lesson(models.Model):
     def str(self):
         return self.title
 
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='Пользователь',
+                             related_name='subscription_user')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс',
+                               related_name='subscription_course')
+    is_subscribe = models.BooleanField(default=False, verbose_name="подписка")
+
+    def __str__(self):
+        return f'{self.user} - {self.course}'
+
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
