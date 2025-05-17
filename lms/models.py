@@ -31,6 +31,26 @@ class Course(models.Model):
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"
 
+    def is_subscribed(self, user):
+        return Subscription.objects.filter(
+            user=user,
+            course=self
+        ).exists()
+
+    def subscribe(self, user):
+        if not self.is_subscribed(user):
+            Subscription.objects.create(
+                user=user,
+                course=self
+            )
+
+    def unsubscribe(self, user):
+        Subscription.objects.filter(
+            user=user,
+            course=self
+        ).delete()
+
+
     def str(self):
         return self.title
 

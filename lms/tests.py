@@ -18,7 +18,7 @@ class LessonTestCase(APITestCase):
         url = reverse('lessons:lesson_create')
         self.client.force_authenticate(user=self.user)
         data = {
-            'name': 'А теперь граматика',
+            'title': 'А теперь граматика',
             'description': 'крутой урок, бесспорно',
             'course': self.course.pk,
             'owner': self.user.pk
@@ -32,7 +32,7 @@ class LessonTestCase(APITestCase):
         url = reverse('lessons:lesson_create')
         self.client.force_authenticate(user=self.user)
         data = {
-            'name': 'А теперь граматика',
+            'title': 'А теперь граматика',
             'description': 'крутой урок, бесспорно',
             'course': self.course.pk,
             'owner': self.user.pk,
@@ -47,7 +47,7 @@ class LessonTestCase(APITestCase):
         url = reverse('lessons:lesson_create')
         self.client.force_authenticate(user=self.user)
         data = {
-            'name': 'А теперь граматика',
+            'title': 'А теперь граматика',
             'description': 'крутой урок, бесспорно',
             'course': self.course.pk,
             'owner': self.user.pk,
@@ -61,7 +61,7 @@ class LessonTestCase(APITestCase):
         url = reverse('lessons:lesson_create')
         self.client.force_authenticate(user=self.user)
         data = {
-            'name': 'А теперь граматика',
+            'title': 'А теперь граматика',
             'description': 'крутой урок, бесспорно',
             'course': self.course.pk,
             'owner': self.user.pk,
@@ -76,7 +76,7 @@ class LessonTestCase(APITestCase):
         url = reverse('lessons:lesson_create')
         self.client.force_authenticate(user=self.user)
         data = {
-            'name': 'А теперь граматика',
+            'title': 'А теперь граматика',
             'description': 'крутой урок, бесспорно',
             'course': self.course.pk,
             'owner': self.user.pk,
@@ -96,7 +96,7 @@ class LessonTestCase(APITestCase):
     def test_lesson_update(self):
         url = reverse('lessons:lesson_update', args=(self.lesson.pk,))
         data = {
-            'name': 'Граматика',
+            'title': 'Граматика',
             'description': 'поможет вам научиться',
             'course': self.course.pk,
             'owner': self.user.pk
