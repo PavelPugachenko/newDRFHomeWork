@@ -8,12 +8,15 @@ from rest_framework.generics import (
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated, AllowAny
+
+from lms.models import Course
 from users.models import Payment, User
 from users.serializers import PaymentSerializer, UserSerializer, MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from users.filters import PaymentFilter
 from rest_framework import viewsets
 
+from users.services import create_stripe_product, create_stripe_price, create_stripe_session
 
 
 # Регистрация пользователей (без авторизации)
@@ -61,9 +64,21 @@ class PaymentListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
 class PaymentCreateAPIView(CreateAPIView):
-    queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
-    permission_classes = [IsAuthenticated]
+    queryset = Payment.objects.all()
+
+    def perform_create(self, serializer):
+        payment = serializer.save(user=self.request.user)
+        course_id = self.request.data.get('course_id')
+        course = Course.objects.all().get(id=course_id)
+        course_title = course.title
+        course_price = course.price
+        stripe_product_id = create_stripe_product(course_title)
+        stripe_price = create_stripe_price(stripe_product_id, course_price)
+        session_id, payment_link = create_stripe_session(stripe_price)
+        payment.session_id = session_id
+        payment.link = payment_link
+        payment.save()
 
 # Авторизация
 class MyTokenObtainPairView(TokenObtainPairView):
