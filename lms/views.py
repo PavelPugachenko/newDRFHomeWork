@@ -70,23 +70,24 @@ class LessonDestroyApiView(DestroyAPIView):
     queryset = Lesson.objects.all()
     permission_classes = [IsOwnerOrModerator]
 
-class SubscriptionAPIView(APIView):
+class SubscriptionCreateAPIView(CreateAPIView):
+    """Эндпоинт создания подписки"""
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionSerializer
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-        user = request.user
-        course_id = request.data.get('course_id')
-        course_item = get_object_or_404(Course, id=course_id)
-        subs_item = Subscription.objects.filter(user=user, course=course_item)
+        user = self.request.user
+        course_id = request.data.get('course')
+        course = get_object_or_404(Course, pk=course_id)
+        subs_item = Subscription.objects.filter(user=user, course=course)
         if subs_item.exists():
             subs_item.delete()
-            message = 'Вы отписались'
+            message = 'Подписка удалена'
         else:
-            Subscription.objects.create(user=user, course=course_item)
-            message = 'Вы подписались'
-        return Response({"message": message})
+            Subscription.objects.create(user=user, course=course, sign_up=True)
+            message = 'Подписка добавлена'
+        return Response({'message': message})
 
 
 class SubscriptionListAPIView(ListAPIView):
