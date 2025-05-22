@@ -12,6 +12,7 @@ from rest_framework.viewsets import ModelViewSet
 from lms.models import Course, Lesson, Subscription
 from lms.paginators import CustomPagination
 from lms.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
+from lms.task import mail_update_course_info
 from users.permissions import IsOwnerOrModerator
 
 
@@ -20,6 +21,7 @@ class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
+    perform_update = mail_update_course_info
 
     @login_required
     def course_detail(request, course_id):

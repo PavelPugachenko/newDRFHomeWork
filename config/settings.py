@@ -144,7 +144,7 @@ CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
 
 CELERY_BEAT_SCHEDULE = {
     "sample_task": {
-        "task": "core.tasks.sample_task",
+        "task": "users.tasks.check_last_login",
         "schedule": crontab(minute="*/1"),
     },
 }

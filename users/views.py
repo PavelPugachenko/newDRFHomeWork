@@ -17,6 +17,7 @@ from users.filters import PaymentFilter
 from rest_framework import viewsets
 
 from users.services import create_stripe_product, create_stripe_price, create_stripe_session
+from users.task import check_last_login
 
 
 # Регистрация пользователей (без авторизации)
@@ -41,6 +42,7 @@ class UserUpdateAPIView(UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+    perform_update = check_last_login
 
 # Детальный просмотр пользователя (с авторизацией)
 class UserRetrieveAPIView(RetrieveAPIView):
