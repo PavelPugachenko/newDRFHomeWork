@@ -21,7 +21,11 @@ class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
-    perform_update = mail_update_course_info
+
+    def perform_update(self, serializer):
+        super().perform_update(serializer)
+        course_id = serializer.instance.id
+        mail_update_course_info.delay(course_id)
 
     @login_required
     def course_detail(request, course_id):

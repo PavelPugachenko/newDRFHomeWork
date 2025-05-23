@@ -12,10 +12,3 @@ def check_last_login():
     users = User.objects.filter(last_login__lt=month_ago, is_active=True)
     users.update(is_active=False)
 
-    for user in users:
-        if month_ago - user.last_login > timedelta(days=30):
-            user.is_active = False
-            user.save()
-            print(f'Пользователь {user.email} отключен')
-        else:
-            print(f'Пользователь {user.email} активен')
