@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:13
     env_file:
-      - ./.env
+      - ./.env.sample
     ports:
       - "15432:5432"
     volumes:
@@ -26,13 +26,13 @@ services:
       - db
       - redis
     env_file:
-      - ./.env
+      - ./.env.sample
 
   celery:
     build: .
     command: celery -A homework worker --loglevel=info
     env_file:
-      - ./.env
+      - ./.env.sample
     depends_on:
       - redis
       - db
@@ -41,7 +41,7 @@ services:
     build: .
     command: celery -A homework beat --loglevel=info
     env_file:
-      - ./.env
+      - ./.env.sample
     depends_on:
       - redis
       - db
