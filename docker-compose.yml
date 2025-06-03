@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:13
     env_file:
-      - ./.env.sample
+       - ./.env
     ports:
       - "15432:5432"
     volumes:
@@ -17,7 +17,7 @@ services:
     build: .
     command: >
       sh -c "python manage.py migrate --noinput &&
-             gunicorn homework.wsgi --bind 0.0.0.0:8000"
+             gunicorn config.wsgi --bind 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -26,22 +26,22 @@ services:
       - db
       - redis
     env_file:
-      - ./.env.sample
+       - ./.env
 
   celery:
     build: .
-    command: celery -A homework worker --loglevel=info
+    command: celery -A config worker --loglevel=info
     env_file:
-      - ./.env.sample
+       - ./.env
     depends_on:
       - redis
       - db
 
   celery-beat:
     build: .
-    command: celery -A homework beat --loglevel=info
+    command: celery -A config beat --loglevel=info
     env_file:
-      - ./.env.sample
+       - ./.env
     depends_on:
       - redis
       - db
