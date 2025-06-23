@@ -1,9 +1,8 @@
 from datetime import datetime
-from django.db import models
+
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
+from django.db import models
 from django.urls import reverse
-from django.core.validators import RegexValidator
 
 from lms.models import Course, Lesson
 
@@ -12,34 +11,27 @@ class User(AbstractUser):
     username = models.CharField(
         max_length=150,
         unique=True,
-        help_text="Обязательное поле. Максимум 150 символов."
+        help_text="Обязательное поле. Максимум 150 символов.",
     )
     email = models.EmailField(unique=True, max_length=254)
-    phone = models.CharField(
-        max_length=15,
-        unique=True
-    )
+    phone = models.CharField(max_length=15, unique=True)
     city = models.CharField(max_length=100)
     avatar = models.ImageField(
-        upload_to='avatars/',
-        null=True,
-        blank=True,
-        default='avatars/default.png'
+        upload_to="avatars/", null=True, blank=True, default="avatars/default.png"
     )
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
         return self.email
 
     def get_absolute_url(self):
-        return reverse('user-detail', kwargs={'pk': self.pk})
-
+        return reverse("user-detail", kwargs={"pk": self.pk})
 
     class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
 
 
 class Payment(models.Model):

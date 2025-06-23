@@ -23,33 +23,25 @@ class Course(models.Model):
         null=True,
         help_text="Загрузите превью",
     )
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True
+    )
 
     name = models.CharField(max_length=255)
-    
+
     class Meta:
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"
 
     def is_subscribed(self, user):
-        return Subscription.objects.filter(
-            user=user,
-            course=self
-        ).exists()
+        return Subscription.objects.filter(user=user, course=self).exists()
 
     def subscribe(self, user):
         if not self.is_subscribed(user):
-            Subscription.objects.create(
-                user=user,
-                course=self
-            )
+            Subscription.objects.create(user=user, course=self)
 
     def unsubscribe(self, user):
-        Subscription.objects.filter(
-            user=user,
-            course=self
-        ).delete()
-
+        Subscription.objects.filter(user=user, course=self).delete()
 
     def str(self):
         return self.title
@@ -89,7 +81,9 @@ class Lesson(models.Model):
         verbose_name="ссылка на видео",
         help_text="загрузите видео",
     )
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True
+    )
 
     class Meta:
         verbose_name = "Урок"
@@ -99,17 +93,24 @@ class Lesson(models.Model):
         return self.title
 
 
-
 class Subscription(models.Model):
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='Пользователь',
-                             related_name='subscription_user')
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс',
-                               related_name='subscription_course')
+    user = models.ForeignKey(
+        "users.User",
+        on_delete=models.CASCADE,
+        verbose_name="Пользователь",
+        related_name="subscription_user",
+    )
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        verbose_name="Курс",
+        related_name="subscription_course",
+    )
     is_subscribe = models.BooleanField(default=False, verbose_name="подписка")
 
     def __str__(self):
-        return f'{self.user} - {self.course}'
+        return f"{self.user} - {self.course}"
 
     class Meta:
-        verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки'
+        verbose_name = "Подписка"
+        verbose_name_plural = "Подписки"

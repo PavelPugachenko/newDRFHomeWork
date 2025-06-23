@@ -1,4 +1,5 @@
-from datetime import timedelta, timezone
+from datetime import timezone
+
 from celery import shared_task
 from dateutil.relativedelta import relativedelta
 
@@ -11,4 +12,3 @@ def check_last_login():
     month_ago = timezone.now() - relativedelta(months=1)
     users = User.objects.filter(last_login__lt=month_ago, is_active=True)
     users.update(is_active=False)
-

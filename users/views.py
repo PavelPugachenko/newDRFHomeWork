@@ -1,22 +1,17 @@
-from rest_framework.generics import (
-    CreateAPIView,
-    ListAPIView,
-    UpdateAPIView,
-    DestroyAPIView,
-    RetrieveAPIView
-)
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.generics import (CreateAPIView, DestroyAPIView,
+                                     ListAPIView, RetrieveAPIView,
+                                     UpdateAPIView)
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from lms.models import Course
 from users.models import Payment, User
-from users.serializers import PaymentSerializer, UserSerializer, MyTokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
-from users.filters import PaymentFilter
-from rest_framework import viewsets
-
-from users.services import create_stripe_product, create_stripe_price, create_stripe_session
+from users.serializers import (MyTokenObtainPairSerializer, PaymentSerializer,
+                               UserSerializer)
+from users.services import (create_stripe_price, create_stripe_product,
+                            create_stripe_session)
 from users.task import check_last_login
 
 
@@ -28,14 +23,16 @@ class UserCreateAPIView(CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save(is_active=True)
-        user.set_password(serializer.validated_data['password'])
+        user.set_password(serializer.validated_data["password"])
         user.save()
+
 
 # Просмотр списка пользователей (с авторизацией)
 class UserListAPIView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+
 
 # Обновление пользователя (с авторизацией)
 class UserUpdateAPIView(UpdateAPIView):
@@ -44,11 +41,13 @@ class UserUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated]
     perform_update = check_last_login
 
+
 # Детальный просмотр пользователя (с авторизацией)
 class UserRetrieveAPIView(RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+
 
 # Удаление пользователя (с авторизацией)
 class UserDestroyAPIView(DestroyAPIView):
@@ -56,14 +55,20 @@ class UserDestroyAPIView(DestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
 
+
 # Работа с платежами
 class PaymentListAPIView(ListAPIView):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ('paid_lesson', 'paid_course', 'payment_type',)
-    ordering_fields = ('date',)
+    filterset_fields = (
+        "paid_lesson",
+        "paid_course",
+        "payment_type",
+    )
+    ordering_fields = ("date",)
     permission_classes = [IsAuthenticated]
+
 
 class PaymentCreateAPIView(CreateAPIView):
     serializer_class = PaymentSerializer
@@ -71,7 +76,7 @@ class PaymentCreateAPIView(CreateAPIView):
 
     def perform_create(self, serializer):
         payment = serializer.save(user=self.request.user)
-        course_id = self.request.data.get('course_id')
+        course_id = self.request.data.get("course_id")
         course = Course.objects.all().get(id=course_id)
         course_title = course.title
         course_price = course.price
@@ -81,6 +86,7 @@ class PaymentCreateAPIView(CreateAPIView):
         payment.session_id = session_id
         payment.link = payment_link
         payment.save()
+
 
 # Авторизация
 class MyTokenObtainPairView(TokenObtainPairView):

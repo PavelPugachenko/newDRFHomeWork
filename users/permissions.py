@@ -6,4 +6,3 @@ class IsOwnerOrModerator(BasePermission):
         if request.user.is_staff:
             return True
         return request.user == view.get_object().owner
-
