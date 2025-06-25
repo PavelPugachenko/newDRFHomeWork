@@ -6,7 +6,7 @@ from lms.views import (CourseViewSet, LessonCreateApiView,
                        LessonDestroyApiView, LessonListApiView,
                        LessonRetrieveApiView, LessonUpdateApiView)
 
-app_name = LmsConfig.name
+app_name = 'lessons'
 
 router = SimpleRouter()
 router.register("courses", CourseViewSet)
