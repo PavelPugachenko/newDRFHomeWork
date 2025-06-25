@@ -21,7 +21,7 @@ class LessonTestCase(APITestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_create_lesson(self):
-        url = reverse("lessons:lessons_create")
+        url = reverse("lessons:lesson_create")
         self.client.force_authenticate(user=self.user)
         data = {
             "title": "А теперь граматика",
@@ -35,7 +35,7 @@ class LessonTestCase(APITestCase):
         self.assertEqual(Lesson.objects.count(), 2)
 
     def test_create_lesson_Youtube(self):
-        url = reverse("lessons:lessons_create")
+        url = reverse("lessons:lesson_create")
         self.client.force_authenticate(user=self.user)
         data = {
             "title": "А теперь граматика",
@@ -50,7 +50,7 @@ class LessonTestCase(APITestCase):
         self.assertEqual(Lesson.objects.count(), 2)
 
     def test_create_lesson_no_Youtube(self):
-        url = reverse("lessons:lessons_create")
+        url = reverse("lessons:lesson_create")
         self.client.force_authenticate(user=self.user)
         data = {
             "title": "А теперь граматика",
@@ -64,7 +64,7 @@ class LessonTestCase(APITestCase):
         self.assertEqual(Lesson.objects.count(), 1)
 
     def test_create_lesson_YouTube(self):
-        url = reverse("lessons:lessons_create")
+        url = reverse("lessons:lesson_create")
         self.client.force_authenticate(user=self.user)
         data = {
             "title": "А теперь граматика",
