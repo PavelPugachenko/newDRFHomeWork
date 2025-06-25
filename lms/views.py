@@ -1,5 +1,6 @@
-from rest_framework import generics
-from .models import Lesson, Subscription
+from amqp import NotFound
+from rest_framework import generics, permissions
+from .models import Lesson, Subscription, Course
 from .serializers import LessonSerializer, SubscriptionSerializer
 
 
@@ -31,6 +32,15 @@ class LessonDeleteView(generics.DestroyAPIView):
 class SubscriptionCreateView(generics.CreateAPIView):
     serializer_class = SubscriptionSerializer
     queryset = Subscription.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        course_id = self.request.data.get('course')
+        try:
+            course = Course.objects.get(id=course_id)
+        except Course.DoesNotExist:
+            raise NotFound("Course not found")
+        serializer.save(user=self.request.user, course=course)
 
 
 class SubscriptionListView(generics.ListAPIView):

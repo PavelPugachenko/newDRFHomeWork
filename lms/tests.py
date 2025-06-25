@@ -87,16 +87,11 @@ class LessonTestCase(APITestCase):
 
     def test_lesson_update(self):
         url = reverse("lessons:lesson_update", args=(self.lesson.pk,))
-        data = {
-            "title": "Граматика",
-            "description": "поможет вам научиться",
-            "course": self.course.pk,
-            "owner": self.user.pk,
-        }
-        response = self.client.patch(url, data)
-        data = response.json()
+        data = {"name": "Граматика"}
+        response = self.client.patch(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(data.get("name"), "Граматика")
+        self.lesson.refresh_from_db()
+        self.assertEqual(self.lesson.name, "Граматика")
 
     def test_lesson_delete(self):
         self.client.force_authenticate(user=self.user)

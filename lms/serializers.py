@@ -39,3 +39,8 @@ class SubscriptionSerializer(ModelSerializer):
     class Meta:
         model = Subscription
         fields = "__all__"
+
+    def validate(self, data):
+        if not Course.objects.filter(id=data['course'].id).exists():
+            raise serializers.ValidationError("Course does not exist.")
+        return data
