@@ -91,7 +91,7 @@ class LessonTestCase(APITestCase):
         url = reverse("lms:lesson-update", args=[self.lesson.id])
         data = {
             "title": "Граматика",
-            "video_url": self.lesson.video_url  # для прохождения валидации
+            "video_url": self.lesson.video_url
         }
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
