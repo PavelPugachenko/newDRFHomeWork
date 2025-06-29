@@ -51,7 +51,6 @@ class SubscriptionCreateView(generics.CreateAPIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        # Проверяем, есть ли уже подписка
         if Subscription.objects.filter(user=request.user, course=course).exists():
             return Response(
                 {"error": "Вы уже подписаны на этот курс"},

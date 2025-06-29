@@ -88,12 +88,10 @@ class LessonTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_lesson_update(self):
-        url = reverse("lms:lesson-update", args=[self.lesson.id])
-        data = {
-            "title": "Граматика",
-            "video_url": self.lesson.video_url
-        }
+        url = reverse("lms:lesson_update", args=[self.lesson.id])
+        data = {"title": "Граматика", "video_url": self.lesson.video_url}
         response = self.client.patch(url, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.lesson.refresh_from_db()
         self.assertEqual(self.lesson.title, "Граматика")
@@ -128,9 +126,11 @@ class SubscriptionTestCase(APITestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_subscribe_to_course(self):
-        url = reverse('lms:subscribe')
+        self.client.force_authenticate(user=self.user)  # авторизуем пользователя
+        url = reverse("lms:subscribe")
         data = {"course": self.course.id}
         response = self.client.post(url, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_subscription_list(self):
@@ -147,9 +147,8 @@ class SubscriptionTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_subscribe_to_course_no_au(self):
-        Subscription.objects.all().delete()
-        self.client.force_authenticate(user="")
-        url = reverse("lms:subscription_create")
-        data = {"course_id": self.course.id}
-        response = self.client.post(url, data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        url = reverse("lms:subscribe")
+        data = {"course": self.course.id}
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

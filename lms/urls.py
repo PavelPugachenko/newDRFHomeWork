@@ -16,7 +16,7 @@ urlpatterns = [
     path('lesson/<int:pk>/delete/', LessonDeleteView.as_view(), name='lesson_delete'),
     path('lesson/list/', LessonListView.as_view(), name='lesson_list'),
     path('lesson/<int:pk>/', LessonRetrieveView.as_view(), name='lesson_retrieve'),
-    path('lesson/<int:pk>/update/', LessonUpdateView.as_view(), name='lesson_update'),
+    path('lesson/<int:pk>/update/', LessonUpdateView.as_view(), name='lesson_update'),  # <-- важно
 
     path('subscribe/', SubscriptionCreateView.as_view(), name='subscribe'),
     path('subscriptions/', SubscriptionListView.as_view(), name='subscription_list'),
