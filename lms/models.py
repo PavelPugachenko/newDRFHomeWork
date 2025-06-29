@@ -43,7 +43,7 @@ class Course(models.Model):
     def unsubscribe(self, user):
         Subscription.objects.filter(user=user, course=self).delete()
 
-    def str(self):
+    def __str__(self):
         return self.title
 
 
@@ -89,7 +89,7 @@ class Lesson(models.Model):
         verbose_name = "Урок"
         verbose_name_plural = "Уроки"
 
-    def str(self):
+    def __str__(self):
         return self.title
 
 
