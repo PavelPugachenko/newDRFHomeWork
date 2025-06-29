@@ -35,13 +35,6 @@ class SubscriptionCreateView(generics.CreateAPIView):
     queryset = Subscription.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        course_id = self.request.data.get('course')
-        try:
-            course = Course.objects.get(id=course_id)
-        except Course.DoesNotExist:
-            return Response({"error": "Курс не найден"}, status=status.HTTP_404_NOT_FOUND)
-
 
 class SubscriptionListView(generics.ListAPIView):
     serializer_class = SubscriptionSerializer
