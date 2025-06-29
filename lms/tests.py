@@ -112,17 +112,31 @@ class LessonTestCase(APITestCase):
 
 class SubscriptionTestCase(APITestCase):
     def setUp(self):
+        # Создаем пользователя
         self.user = User.objects.create(email="www@yandex.com")
+
+        # Создаем курс
         self.course = Course.objects.create(
             title="Основы Английского",
             description="научитесь грамотно говорить в любой стране",
+            owner=self.user  # если у вас есть поле owner в модели Course
         )
+
+        # Создаем урок
         self.lesson = Lesson.objects.create(
-            title="жи-ши с буквой и", course=self.course, owner=self.user
+            title="жи-ши с буквой и",
+            course=self.course,
+            owner=self.user
         )
+
+        # Создаем подписку
         self.subscription = Subscription.objects.create(
-            user=self.user, course=self.course
+            user=self.user,
+            course=self.course,
+            is_subscribe=True  # если это нужно для тестов
         )
+
+        # Авторизуем пользователя для API-запросов
         self.client.force_authenticate(user=self.user)
 
     def test_subscribe_to_course(self):
