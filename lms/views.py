@@ -1,5 +1,6 @@
 from amqp import NotFound
-from rest_framework import generics, permissions
+from requests import Response
+from rest_framework import generics, permissions, status
 from .models import Lesson, Subscription, Course
 from .serializers import LessonSerializer, SubscriptionSerializer
 
@@ -39,8 +40,7 @@ class SubscriptionCreateView(generics.CreateAPIView):
         try:
             course = Course.objects.get(id=course_id)
         except Course.DoesNotExist:
-            raise NotFound("Course not found")
-        serializer.save(user=self.request.user, course=course)
+            return Response({"error": "Курс не найден"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class SubscriptionListView(generics.ListAPIView):

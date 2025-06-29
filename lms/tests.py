@@ -1,6 +1,8 @@
 from django.urls import reverse
+from requests import Response
 from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework.exceptions import NotFound
 
 from users.models import User
 
@@ -91,7 +93,7 @@ class LessonTestCase(APITestCase):
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.lesson.refresh_from_db()
-        self.assertEqual(self.lesson.name, "Граматика")
+        self.assertEqual(self.lesson.title, "Граматика")
 
     def test_lesson_delete(self):
         self.client.force_authenticate(user=self.user)
@@ -125,7 +127,7 @@ class SubscriptionTestCase(APITestCase):
     def test_subscribe_to_course(self):
         Subscription.objects.all().delete()
         url = reverse("lessons:subscription_create")
-        data = {"course_id": self.course.id}
+        data = {'course': self.course.id}
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["message"], "Вы подписались")
@@ -145,12 +147,14 @@ class SubscriptionTestCase(APITestCase):
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]["course"], self.course.id)
 
-    def test_subscribe_to_course_no_ex(self):
+    def test_subscribe_to_course_no_ex(self, course_id=None):
         Subscription.objects.all().delete()
         url = reverse("lessons:subscription_create")
         data = {"course_id": ""}
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        if not Course.objects.filter(id=course_id).exists():
+            return Response({"error": "Курс не найден"}, status=status.HTTP_404_NOT_FOUND)
 
     def test_subscribe_to_course_no_au(self):
         Subscription.objects.all().delete()

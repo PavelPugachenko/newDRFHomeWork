@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
 from rest_framework.serializers import ModelSerializer
 
 from .models import Course, Lesson, Subscription
@@ -39,6 +39,12 @@ class SubscriptionSerializer(ModelSerializer):
     class Meta:
         model = Subscription
         fields = "__all__"
+
+    def test_subscribe_to_course(self):
+        url = reverse('lms:subscribe')
+        data = {'course': self.course.id}  # убедитесь, что поле называется так же, как в сериалайзере
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def validate(self, data):
         if not Course.objects.filter(id=data['course'].id).exists():
