@@ -2,6 +2,8 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from .models import Lesson, Subscription, Course
 from .serializers import LessonSerializer, SubscriptionSerializer
+from rest_framework.exceptions import NotFound
+
 
 
 class LessonCreateView(generics.CreateAPIView):
@@ -27,7 +29,6 @@ class LessonUpdateView(generics.UpdateAPIView):
 class LessonDeleteView(generics.DestroyAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-
 
 class SubscriptionCreateView(generics.CreateAPIView):
     serializer_class = SubscriptionSerializer
