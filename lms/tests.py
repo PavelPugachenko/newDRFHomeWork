@@ -23,7 +23,7 @@ class LessonTestCase(APITestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_create_lesson(self):
-        url = reverse("lessons:lesson_create")
+        url = reverse("lms:lesson_create")
         self.client.force_authenticate(user=self.user)
         data = {
             "title": "А теперь граматика",
@@ -37,7 +37,7 @@ class LessonTestCase(APITestCase):
         self.assertEqual(Lesson.objects.count(), 2)
 
     def test_create_lesson_Youtube(self):
-        url = reverse("lessons:lesson_create")
+        url = reverse("lms:lesson_create")
         self.client.force_authenticate(user=self.user)
         data = {
             "title": "А теперь граматика",
@@ -52,7 +52,7 @@ class LessonTestCase(APITestCase):
         self.assertEqual(Lesson.objects.count(), 2)
 
     def test_create_lesson_no_Youtube(self):
-        url = reverse("lessons:lesson_create")
+        url = reverse("lms:lesson_create")
         self.client.force_authenticate(user=self.user)
         data = {
             "title": "А теперь граматика",
@@ -66,7 +66,7 @@ class LessonTestCase(APITestCase):
         self.assertEqual(Lesson.objects.count(), 1)
 
     def test_create_lesson_YouTube(self):
-        url = reverse("lessons:lesson_create")
+        url = reverse("lms:lesson_create")
         self.client.force_authenticate(user=self.user)
         data = {
             "title": "А теперь граматика",
@@ -82,7 +82,7 @@ class LessonTestCase(APITestCase):
 
 
     def test_lesson_retrieve(self):
-        url = reverse("lessons:lesson_retrieve", args=(self.lesson.pk,))
+        url = reverse("lms:lesson_retrieve", args=(self.lesson.pk,))
         self.client.force_authenticate(user=self.user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -100,13 +100,13 @@ class LessonTestCase(APITestCase):
 
     def test_lesson_delete(self):
         self.client.force_authenticate(user=self.user)
-        url = reverse("lessons:lesson_delete", args=(self.lesson.pk,))
+        url = reverse("lms:lesson_delete", args=(self.lesson.pk,))
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Lesson.objects.all().count(), 0)
 
     def test_lesson_list(self):
-        url = reverse("lessons:lesson_list")
+        url = reverse("lms:lesson_list")
         self.client.force_authenticate(user=self.user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -134,7 +134,7 @@ class SubscriptionTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_subscription_list(self):
-        url = reverse("lessons:subscription_list")
+        url = reverse("lms:subscription_list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
@@ -149,7 +149,7 @@ class SubscriptionTestCase(APITestCase):
     def test_subscribe_to_course_no_au(self):
         Subscription.objects.all().delete()
         self.client.force_authenticate(user="")
-        url = reverse("lessons:subscription_create")
+        url = reverse("lms:subscription_create")
         data = {"course_id": self.course.id}
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
