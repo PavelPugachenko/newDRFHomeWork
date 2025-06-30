@@ -63,11 +63,14 @@ jobs:
         run: echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/online_work:${{ github.sha }} .
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/online_work:${{ github.sha }} .
+          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/online_work:${{ github.sha }} ${{ secrets.DOCKER_HUB_USERNAME }}/online_work:latest
 
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/online_work:${{ github.sha }}
-
+        run: |
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/online_work:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/online_work:latest
   deploy:
     needs: build
     runs-on: ubuntu-latest
