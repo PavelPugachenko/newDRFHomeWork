@@ -97,8 +97,8 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
           ssh-passphrase: ${{ secrets.SSH_PASSPHRASE }}
-      - name: Adding Known Hosts
-        run: ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+#      - name: Adding Known Hosts
+#        run: ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
       - name: Deploy to Server
         run: |
